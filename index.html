@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jó szó</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <h2 id="loadingText" class="loading">
+    Egy kis türelmet kérnék<span id="loadingDots">.</span>
+  </h2>
+  <div class="app">
+    <h1>JÓ SZÓ</h1>
+	<h2 id="forcedDateLabel" class="forced-date hidden"></h2>
+    <div id="board" class="board"></div>
+    <div id="keyboard" class="keyboard keyboard-margin"></div>
+    <div id="msg" class="msg"></div>
+	<a
+	  id="submitWordBtn"
+	  href="https://forms.gle/iac3mEbovrBqp5Z4A"
+	  target="_blank"
+	  class="joszo-btn hidden">
+	  Tudsz egy jó szót?
+	</a>
+	<a id="archiveBtn" href="archive.html" class="joszo-btn thin-margin-btn hidden">
+		Régi, de jó szavakat keresel?
+	</a>
+  </div>
+
+<dialog id="rateDialog">
+
+  <h3 id="popupDescription" style="font-size:1rem; opacity:0.9">
+  
+    <!-- description is injected here -->
+  </h3>
+    <p class="centered-text">Na de mennyire jó ez a szó?</p>
+
+  <div style="text-align:center;margin:12px 0">
+    <div id="ratingValue" style="font-size:2rem;font-weight:bold">5/10</div>
+    <input
+      id="ratingSlider"
+      type="range"
+      min="0"
+      max="10"
+      value="5"
+      step="1"
+      style="width:100%"
+    >
+  </div>
+
+  <button id="rateSubmit" class="rate-submit-btn" style="width:100%;padding:8px">
+    Küldés
+  </button>
+  
+</dialog>
+
+
+  <script type="module" src="js/game.js"></script>
+</body>
+</html>
