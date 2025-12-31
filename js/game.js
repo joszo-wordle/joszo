@@ -80,7 +80,7 @@ Promise.all([
   const len = target.length;
   const minGuessesLimit = 6;
   const maxGuessesLimit = 9;
-  const maxGuesses = Math.max(minGuessesLimit, Math.min(maxGuessesLimit, len));
+  const maxGuesses = Math.max(minGuessesLimit, Math.min(maxGuessesLimit, 12-len + 3));
 
   const board = document.getElementById('board');
   const keyboard = document.getElementById('keyboard');
