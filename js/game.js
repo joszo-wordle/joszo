@@ -78,9 +78,17 @@ Promise.all([
   const authorScore = daily.score ?? '–';
 
   const len = target.length;
-  const minGuessesLimit = 6;
-  const maxGuessesLimit = 9;
-  const maxGuesses = Math.max(minGuessesLimit, Math.min(maxGuessesLimit, 12-len + 3));
+  let mG = 6;
+  if(len <= 4){
+	mG = 9;
+  }
+  else if(len <= 6){
+	mG = 8;
+  }
+  else if(len <= 8){
+	mG = 7;
+  }
+  const maxGuesses = mG;
 
   const board = document.getElementById('board');
   const keyboard = document.getElementById('keyboard');
