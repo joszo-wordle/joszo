@@ -9,17 +9,48 @@
 <body>
   <div class="archive-container">
     <h1>JÓ SZÓ</h1>
+
     <div class="archive-header">
       <button id="prevMonth" class="arrow-btn">◀</button>
       <div id="monthName" class="month-name"></div>
       <button id="nextMonth" class="arrow-btn">▶</button>
     </div>
+
     <div class="weekdays">
       <div>H</div><div>K</div><div>Sze</div><div>Cs</div><div>P</div><div>Szo</div><div>V</div>
     </div>
+
     <div id="calendarGrid" class="calendar-grid"></div>
+
+    <!-- MONTHLY BADGE AREA -->
+    <div id="monthlyBadgeArea" class="monthly-badge-area">
+      <div id="badgeIcon" class="badge-icon badge-locked" aria-label="Havi jelvény"></div>
+      <div id="badgeText" class="badge-text">
+        Találj ki minden szót, hogy megszerezd a havi jelvényt!
+      </div>
+    </div>
+
     <a href="index.html" class="joszo-btn">Vissza a mai játékhoz</a>
   </div>
+
+  <!-- BADGE POPUP -->
+  <dialog id="badgeDialog" class="badge-dialog">
+    <div class="badge-dialog-inner">
+      <button id="badgeClose" class="badge-close" aria-label="Bezárás">✕</button>
+
+      <div id="badgeRevealWrap" class="badge-reveal-wrap">
+        <div id="badgeRevealIcon" class="badge-reveal-icon"></div>
+        <div id="badgeRevealTitle" class="badge-reveal-title"></div>
+
+        <div class="badge-stats">
+          <div id="statFav" class="badge-stat hidden"></div>
+          <div id="statFast" class="badge-stat hidden"></div>
+		  <div id="statHate" class="badge-stat hidden"></div>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
   <script type="module" src="js/archive.js"></script>
 </body>
 </html>
