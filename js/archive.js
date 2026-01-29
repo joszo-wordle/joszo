@@ -193,20 +193,44 @@ async function revealStatLabelThenScrambleWord(el, labelText, wordText, delayMs)
 function collectMonthData(month, year) {
   const daysInMonth = new Date(year, month + 1, 0).getDate();
 
-  let playableDays = 0;
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const monthEnd = new Date(year, month, daysInMonth);
+  monthEnd.setHours(0, 0, 0, 0);
+
+  // month is complete only if we reached the last day (or later)
+  const isMonthComplete = daysBetween(today, monthEnd) >= 0;
+
+  let playableDaysSoFar = 0;      // days in month that are playable up to today
+  let playableDaysFullMonth = 0;  // all playable days in that month (ignoring today cutoff)
+
   let playedDays = 0;
   let greenDays = 0;
 
   const entries = [];
 
+  const todayIndex = daysBetween(today, START_DATE);
+
   for (let day = 1; day <= daysInMonth; day++) {
     const d = new Date(year, month, day);
-    d.setHours(0,0,0,0);
+    d.setHours(0, 0, 0, 0);
 
-    if (!isDayInPlayableRange(d)) continue;
-    playableDays++;
+    const dayIndex = daysBetween(d, START_DATE);
+
+    // before game start → not a playable day ever
+    if (dayIndex < 0) continue;
+
+    // this day counts as part of the full month challenge
+    playableDaysFullMonth++;
+
+    // playable "so far" (for progress / tier calculations)
+    if (dayIndex <= todayIndex) {
+      playableDaysSoFar++;
+    }
 
     const state = getDayState(d);
+
     if (isPlayedDay(state)) playedDays++;
     if (isGreenDay(state)) greenDays++;
 
@@ -219,13 +243,25 @@ function collectMonthData(month, year) {
     }
   }
 
-	const completedAllDays = playableDays > 0 && playedDays === playableDays;	
+  // badge earnable only if month is complete AND all full-month playable days were played
+  const completedAllDays =
+    playableDaysFullMonth > 0 &&
+    isMonthComplete &&
+    playedDays === playableDaysFullMonth;
+
   return {
     daysInMonth,
-    playableDays,
+
+    playableDays: playableDaysSoFar, // keep your existing name so you don’t need refactors
+    playableDaysSoFar,
+    playableDaysFullMonth,
+
     playedDays,
     greenDays,
+
+    isMonthComplete,
     completedAllDays,
+
     entries
   };
 }
