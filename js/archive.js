@@ -57,7 +57,7 @@ function isGreenDay(state) {
 }
 
 function isPlayedDay(state) {
-  return !!state;
+  return !!state && state.done;
 }
 
 function isDayInPlayableRange(d) {
@@ -66,10 +66,14 @@ function isDayInPlayableRange(d) {
   return dayIndex >= 0 && dayIndex <= todayIndex;
 }
 
-function getBadgeTier(greenCount) {
-  if (greenCount >= 31) return "gold";
-  if (greenCount >= 20) return "silver";
-  if (greenCount >= 10) return "bronze";
+function getBadgeTier(greenDays, playableDays) {
+  if (playableDays <= 0) return "wood";
+
+  const ratio = greenDays / playableDays;
+
+  if (ratio >= 1) return "gold";        // 100%
+  if (ratio >= 2 / 3) return "silver";  // 66.6%
+  if (ratio >= 1 / 3) return "bronze";  // 33.3%
   return "wood";
 }
 
@@ -185,8 +189,7 @@ function collectMonthData(month, year) {
     }
   }
 
-  const completedAllDays = playableDays > 0 && playedDays === playableDays;
-
+	const completedAllDays = playableDays > 0 && playedDays === playableDays;	
   return {
     daysInMonth,
     playableDays,
@@ -304,7 +307,7 @@ function isBadgeForceOpen() {
 
 async function openBadgePopup(month, year, { forceReveal }) {
   const data = collectMonthData(month, year);
-  const tier = getBadgeTier(data.greenDays);
+  const tier = getBadgeTier(data.greenDays, data.playableDays);
   const stats = computeMonthlyWordStats(data.entries);
 
   // reset popup state
@@ -404,14 +407,14 @@ function updateMonthlyBadge(month, year) {
     monthlyBadgeArea.classList.remove("hidden");
   }
 
-  const tier = getBadgeTier(data.greenDays);
+  const tier = getBadgeTier(data.greenDays, data.playableDays);
   const revealed = isBadgeRevealed(year, month);
 
   badgeIcon.className = "badge-icon badge-locked";
-  badgeText.textContent = "Találj ki minden szót, hogy megszerezd a havi jelvényt!";
+  badgeText.textContent = "Próbáld meg kitalálni az összes szót, hogy megszerezd a havi jelvényt!";
 
   if (data.completedAllDays || isBadgeForceOpen()) {
-    badgeText.textContent = "Mutasd a jelvényt!";
+    badgeText.textContent = "Nézd meg a jelvényed!";
 
     if (revealed) {
       badgeIcon.className = `badge-icon ${tierClass(tier)}`;
@@ -507,16 +510,16 @@ renderCalendar(displayedMonth, displayedYear);
 
 /* ---------- DEBUG API (console) ---------- */
 
-/* window.badge = {
-   forceOpen() {
-     setBadgeForceOpen(true);
-     console.log("Badge forced open (debug enabled)");
-     renderCalendar(displayedMonth, displayedYear);
-   },
+window.badge = {
+   // forceOpen() {
+     // setBadgeForceOpen(true);
+     // console.log("Badge forced open (debug enabled)");
+     // renderCalendar(displayedMonth, displayedYear);
+   // },
    reset() {
      setBadgeForceOpen(false);
      localStorage.removeItem(getRevealStorageKey(displayedYear, displayedMonth));
-     console.log("Badge reset for current month (forceOpen + reveal cleared)");
+     console.log("Badge reset for current month");
      renderCalendar(displayedMonth, displayedYear);
    }
- };*/
+ };
