@@ -32,6 +32,7 @@ const badgeRevealTitle = document.getElementById("badgeRevealTitle");
 const statFav = document.getElementById("statFav");
 const statHate = document.getElementById("statHate");
 const statFast = document.getElementById("statFast");
+const statCongrats = document.getElementById("statCongrats");
 
 /* ---------- helpers ---------- */
 
@@ -89,7 +90,7 @@ function tierClass(tier) {
 }
 
 function clearStats() {
-  for (const el of [statFav, statHate, statFast]) {
+  for (const el of [statFav, statHate, statFast, statCongrats]) {
     el.classList.add("hidden");
     el.classList.remove("show");
     el.classList.remove("scrambling");
@@ -97,6 +98,35 @@ function clearStats() {
     el.textContent = "";
   }
 }
+
+async function revealCongratsText(el, text, delayMs = 450) {
+  await sleep(delayMs);
+  el.textContent = text;
+  el.classList.remove("hidden");
+  requestAnimationFrame(() => el.classList.add("show"));
+}
+
+
+const CONGRATS_TEXTS = [
+  "Az igen!",
+  "Nem semmi!",
+  "Bitang veszélyes vagy!",
+  "Kratulálog!",
+  "Hát ez marhajó!",
+  "Még egy ilyet...",
+  "Aztamindenségit!",
+  "Nagy szónok vagy!",
+  "Nagyot szólt!",
+  "Na ezt nem láttuk jönni.",
+  "Hát ez kész...",
+  "Nadon jó, nadon jó, nadon jó!",
+  "Na de milyen a chilis?"
+];
+
+function pickRandomCongrats() {
+  return CONGRATS_TEXTS[Math.floor(Math.random() * CONGRATS_TEXTS.length)];
+}
+
 
 /* ---------- goofy cipher scramble reveal ---------- */
 
@@ -352,6 +382,7 @@ async function openBadgePopup(month, year, { forceReveal }) {
       stats.hatedWord || "—",
       650
     );
+	await revealCongratsText(statCongrats, pickRandomCongrats(), 500);
 
 
   } else {
@@ -375,6 +406,10 @@ async function openBadgePopup(month, year, { forceReveal }) {
     showNow(statFav, "kedvenc szavad: ", stats.favoriteWord);
 	showNow(statFast, "leggyorsabb szavad: ", stats.fastestWord);
     showNow(statHate, "legutálatosabb szavad: ", stats.hatedWord);
+	
+	statCongrats.textContent = pickRandomCongrats();
+	statCongrats.classList.remove("hidden");
+	statCongrats.classList.add("show");
   }
 }
 
@@ -511,11 +546,11 @@ renderCalendar(displayedMonth, displayedYear);
 /* ---------- DEBUG API (console) ---------- */
 
 window.badge = {
-   // forceOpen() {
-     // setBadgeForceOpen(true);
-     // console.log("Badge forced open (debug enabled)");
-     // renderCalendar(displayedMonth, displayedYear);
-   // },
+     // forceOpen() {
+      // setBadgeForceOpen(true);
+      // console.log("Badge forced open (debug enabled)");
+      // renderCalendar(displayedMonth, displayedYear);
+    // },
    reset() {
      setBadgeForceOpen(false);
      localStorage.removeItem(getRevealStorageKey(displayedYear, displayedMonth));

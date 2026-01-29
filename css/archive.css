@@ -326,3 +326,20 @@ h1{
 .badge-tier-wood { color: var(--wood); }
 
 .hidden { display: none; }
+
+.badge-congrats {
+  margin-top: 14px;
+  margin-bottom: 10px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(8px) scale(0.98);
+}
+
+.badge-congrats.show {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  transition: opacity 350ms ease, transform 350ms ease;
+}
+
