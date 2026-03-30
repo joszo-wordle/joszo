@@ -2,6 +2,7 @@
 import { START_DATE, STORAGE_PREFIX } from './config.js';
 import { parseCSV, parseLocalDate, dateKeyLocal } from './utils.js';
 import { getTrustedToday } from './time.js';
+import { daysBetween } from './utils.js';
 
 const urlParams = new URLSearchParams(window.location.search);
 const forcedDate = urlParams.get('date'); // YYYY-MM-DD or null
@@ -25,7 +26,7 @@ const loadingInterval = setInterval(() => {
 
 async function daysSinceStart() {
   const today = await getTrustedToday();
-  return Math.floor((today - START_DATE) / 86400000);
+  return daysBetween(today, START_DATE);
 }
 
 /* ---------- LOAD DATA ---------- */
@@ -51,7 +52,7 @@ Promise.all([
   if (forcedDate) {
 	archiveBtn.textContent = forcedArchiveBtnText;
     const forced = parseLocalDate(forcedDate);
-    dayIndex = Math.floor((forced - START_DATE) / 86400000);
+    dayIndex = daysBetween(forced, START_DATE);
   }
   
   let forcedDateIsToday = dayIndex === daysSinceSt;
