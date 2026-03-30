@@ -78,7 +78,7 @@ h1{text-align:center;margin:8px 0 12px}
   display: grid;
   gap: 6px;
   justify-content: center;
-  margin: 5vh 0 0 0;
+  margin: 5vh 0 3vh 0;
 }
 
 .kb-row {
