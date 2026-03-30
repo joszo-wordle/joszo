@@ -13,9 +13,9 @@ export function dateKeyLocal(d) {
 }
 
 export function daysBetween(a, b) {
-  a = new Date(a); a.setHours(0,0,0,0);
-  b = new Date(b); b.setHours(0,0,0,0);
-  return Math.floor((a - b) / 86400000);
+  const utcA = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate());
+  const utcB = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate());
+  return Math.floor((utcA - utcB) / 86400000);
 }
 
 export function parseCSV(text) {
