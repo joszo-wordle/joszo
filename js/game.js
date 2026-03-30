@@ -5,7 +5,8 @@ import { getTrustedToday } from './time.js';
 
 const urlParams = new URLSearchParams(window.location.search);
 const forcedDate = urlParams.get('date'); // YYYY-MM-DD or null
-const todayKey = forcedDate || dateKeyLocal(new Date());
+let trustedToday = await getTrustedToday();
+let todayKey = forcedDate || dateKeyLocal(trustedToday);
 const storageKey = STORAGE_PREFIX + todayKey;
 
 /* ---------- LOADING TEXT ---------- */
