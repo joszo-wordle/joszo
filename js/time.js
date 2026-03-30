@@ -11,8 +11,7 @@ function fetchWithTimeout(url, options = {}, timeoutMs = 1500) {
 }
 
 export async function getTrustedToday() {
-  const localToday = new Date();
-  localToday.setHours(0,0,0,0);
+  const localToday = parseLocalDate(dateKeyLocal(new Date()));
   const localKey = dateKeyLocal(localToday);
 
   const cached = localStorage.getItem(TRUSTED_DATE_KEY);
@@ -27,7 +26,8 @@ export async function getTrustedToday() {
         { cache: 'no-store' }
       );
       const j = await r.json();
-      return new Date(j.dateTime);
+	  const dateStr = j.dateTime.slice(0, 10); // YYYY-MM-DD
+	  return parseLocalDate(dateStr);;
     },
     async () => {
       const r = await fetchWithTimeout(
@@ -35,7 +35,8 @@ export async function getTrustedToday() {
         { cache: 'no-store' }
       );
       const j = await r.json();
-      return new Date(j.utc_datetime);
+	  const dateStr = j.utc_datetime.slice(0, 10); // YYYY-MM-DD
+	  return parseLocalDate(dateStr);
     }
   ];
 
@@ -43,7 +44,6 @@ export async function getTrustedToday() {
   for (const s of sources) {
     try {
       const d = await s();
-      d.setHours(0,0,0,0);
       localStorage.setItem(TRUSTED_DATE_KEY, dateKeyLocal(d));
       return d;
     } catch (e) {
